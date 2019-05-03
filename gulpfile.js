@@ -25,19 +25,24 @@ gulp.task('css',function(){
 gulp.task('watch',function(){
 
 	browserSync.init({
+
 		server:{
 			baseDir:"app"
 		}
 	});
 
-	  watch('./app/**/*.html', gulp.series('html'));
-	  watch('./app/assets/styles/**/*.css',gulp.series('css'));
+	  watch('./app/**/*.html', function(){
+		  browserSync.reload();
+	  });
+	  watch('./app/assets/styles/**/*.css',gulp.series('cssInject'));
 
 });
 
 
-
-
+gulp.task('cssInject',gulp.series(gulp.parallel('css') ,function(){
+	return gulp.src('./app/tenp/styles/styles.css')
+				.pipe(browserSync.stream());
+}));
 
 
 
